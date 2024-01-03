@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.goodee.library.admin.AdminDao">
+	<select id="isAdmin" parameterType="String" resultType="int">
+		SELECT COUNT(*)FROM tbl_admin_member
+		<where>
+			a_m_id = #{a_m_id}
+		</where>
+	</select>
+
+	<insert id="insertAdmin" parameterType="com.goodee.library.admin.AdminVo">
+		INSERT INTO tbl_admin_member(a_m_id, a_m_pw, a_m_name, a_m_gender,
+		a_m_mail, a_m_phone, a_m_reg_date, a_m_mod_date)
+		VALUES(#{a_m_id}, #{a_m_pw}, #{a_m_name}, #{a_m_gender}, 
+		#{a_m_mail}, #{a_m_phone}, NOW(), NOW())
+	</insert>
+	
+	<select id="selectAdmin" parameterType="String" resultType="com.goodee.library.admin.AdminVo">
+		SELECT * FROM tbl_admin_member
+		<where>
+			a_m_id = #{a_m_id}
+		</where>
+	</select>
+	
+	<select id="selectAdminList" resultType="com.goodee.library.admin.AdminVo">
+		SELECT * FROM tbl_admin_member
+	</select>
+	
+	<update id="modifyAdminConfirm" parameterType="com.goodee.library.admin.AdminVo">
+		UPDATE tbl_admin_member
+		SET a_m_name = #{a_m_name},
+		a_m_gender = #{a_m_gender},
+		a_m_mail = #{a_m_mail},
+		a_m_phone = #{a_m_phone},
+		a_m_mod_date = NOW()
+		<where>
+			a_m_no = #{a_m_no}
+		</where>
+	</update>
+	
+	<select id="selectAdminOne" parameterType="int" resultType="com.goodee.library.admin.AdminVo">
+		SELECT * FROM tbl_admin_member
+		<where>
+			a_m_no = #{a_m_no}
+		</where>
+	</select>
+	
+	<select id="selectAdminForPassword" parameterType="hashMap" resultType="com.goodee.library.admin.AdminVo">
+		SELECT * FROM tbl_admin_member
+		<where>
+			a_m_id = #{a_m_id}
+			AND a_m_name = #{a_m_name}
+			AND a_m_mail = #{a_m_mail}
+		</where>
+	</select>
+	
+	<update id="updatePassword" parameterType="hashMap">
+		UPDATE tbl_admin_member
+		SET a_m_pw = #{a_m_password},
+		a_m_mod_date = NOW()
+		<where>
+			a_m_id = #{a_m_id}
+		</where>
+	</update>
+	
+	
+</mapper>

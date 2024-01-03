@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.goodee.library.book.bookDao">
+	<insert id="insertBook" parameterType="com.goodee.library.book.BookVo">
+		INSERT INTO tbl_book(b_thumbnail,b_name,b_author,b_publisher,
+			b_publish_year, b_reg_date, b_mod_date)
+		VALUES(#{b_thumbnail},#{b_name},#{b_author},#{b_publisher},
+			#{b_publish_year},NOW(),NOW());
+	</insert>
+	
+	<select id="selectBookList" parameterType="com.goodee.library.book.BookVo" resultType="com.goodee.library.book.BookVo">
+		SELECT * FROM tbl_book
+		<if test="b_name != null and b_name.equals('') == false">
+			<where>
+				b_name LIKE CONCAT ('%',#{b_name},'%')
+			</where>
+		</if>
+		ORDER BY b_no DESC
+		LIMIT #{limit_pageNo}, #{pageSize}
+	</select>
+	
+	<select id="selectBook" parameterType="int" resultType="com.goodee.library.book.BookVo">
+		SELECT * FROM tbl_book
+		<where>
+			b_no = #{b_no}
+		</where>
+	</select>
+	
+	<select id="selectBookCount" resultType="int" parameterType="String">
+		SELECT COUNT(*) FROM tbl_book
+		<if test="b_name != null and b_name.equals('') == false">
+			<where>
+				b_name LIKE CONCAT ('%',#{b_name},'%')
+			</where>
+		</if>
+	</select>
+	
+	<update id="updateBook" parameterType="com.goodee.library.book.BookVo">
+		UPDATE tbl_book SET
+		<if test="b_thumbnail != null and b_thumbnail.equals('') == false">
+			b_thumbnail = #{b_thumbnail},
+		</if>
+		b_name = #{b_name},
+		b_author = #{b_author},
+		b_publisher = #{b_publisher},
+		b_publish_year=#{b_publish_year},
+		b_mod_date = NOW()
+		<where>
+			b_no = #{b_no}
+		</where>
+	</update>
+	
+	<delete id="deleteBook" parameterType="int">
+		DELETE FROM tbl_book
+		<where>
+			b_no = #{b_no}
+		</where>
+	</delete>
+</mapper>
